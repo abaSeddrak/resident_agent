@@ -23,3 +23,19 @@ QdrantVectorStore.from_documents(
     force_recreate=True,
 )
 print("done")
+
+
+
+
+from collections import Counter
+
+print(Counter((d.metadata["language"], d.metadata["section"]) for d in docs))
+
+for lang in ["en", "ar"]:
+    for section in ["faq", "communityRules", "termsConditions"]:
+        first = next(
+            (d for d in docs if d.metadata["language"] == lang and d.metadata["section"] == section),
+            None,
+        )
+        print(lang, section, "→", first.page_content[:60] if first else "❌ مفيش")
+        

@@ -4,7 +4,7 @@ from langchain_core.documents import Document
 from app.services.text_cleaning import html_to_text
 
 SEPARATORS = {
-    "faq": "####",
+    "faq": "⸻",
     "communityRules": "⸻",
     "termsConditions": "⸻",
     "aboutUs": None,
