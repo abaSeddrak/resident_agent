@@ -6,5 +6,7 @@ class Settings(BaseSettings):
     openai_api_key:str
     openai_model:str
     
+    qdrant_url:str
+    
     
 settings = Settings()
