@@ -1,0 +1,32 @@
+[
+  {
+    "id": "faq_en_001",
+    "question": "What are the attachment limits when I submit a complaint?",
+    "language_code": "en",
+    "app_code": "cityeyeprod",
+    "compound_id": 17,
+    "expected_answer": "Text up to 300 characters, 1 to 5 photos, a video up to 30 seconds, and a voice note up to 33 seconds. These limits may differ based on each compound's settings.",
+    "expected_section": "faq",
+    "type": "answerable"
+  },
+  {
+    "id": "rules_ar_001",
+    "question": "إيه مواعيد الهدوء في الكمبوند؟",
+    "language_code": "ar",
+    "app_code": "cityeyeprod",
+    "compound_id": 17,
+    "expected_answer": "ساعات الهدوء يوميًا من 11 مساءً حتى 8 صباحًا، ويوم الجمعة حتى 11 صباحًا.",
+    "expected_section": "communityRules",
+    "type": "answerable"
+  },
+  {
+    "id": "none_en_001",
+    "question": "What is the Wi-Fi password for the clubhouse?",
+    "language_code": "en",
+    "app_code": "cityeyeprod",
+    "compound_id": 17,
+    "expected_answer": null,
+    "expected_section": null,
+    "type": "unanswerable"
+  }
+]

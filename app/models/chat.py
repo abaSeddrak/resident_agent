@@ -9,3 +9,10 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     answer:str
+    
+    
+class ChatResult(BaseModel):
+    answer:str
+    contexts:list[str]
+    sections:list[str]
+    
