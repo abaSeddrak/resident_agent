@@ -1,4 +1,5 @@
 from langchain_openai import ChatOpenAI
+from langsmith import traceable
 from app.config import settings
 from app.prompts.system_prompt import SYSTEM_PROMPT
 from app.rag.retriever import retrieve
@@ -6,7 +7,7 @@ from app.models.chat import ChatResult
 
 llm = ChatOpenAI(model=settings.openai_model, api_key=settings.openai_api_key)
 
-
+@traceable(name="resident-chat-answer")
 def answer(question: str, appCode: str, compoundId: int, language_code: str)->ChatResult:
     docs = retrieve(question, appCode, language_code, 4)
     if not docs:

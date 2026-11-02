@@ -8,5 +8,5 @@ class Settings(BaseSettings):
     
     qdrant_url:str
     
-    
+    langsmith_api_key:str
 settings = Settings()

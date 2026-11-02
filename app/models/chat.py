@@ -16,3 +16,5 @@ class ChatResult(BaseModel):
     contexts:list[str]
     sections:list[str]
     
+    
+    

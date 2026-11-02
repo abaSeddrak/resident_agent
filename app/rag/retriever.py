@@ -1,7 +1,9 @@
 from langchain_qdrant import QdrantVectorStore
 from langchain_core.documents import Document
+from langsmith import traceable
 from qdrant_client import models
 from app.rag.vector_store import get_vector_store
+@traceable(run_type="retriever", name="qdrant-retrieve")
 def retrieve(question:str,app_code:str,language_code:str,k:int=4)->list[Document]:
     tenant_filter= models.Filter(
         must=[

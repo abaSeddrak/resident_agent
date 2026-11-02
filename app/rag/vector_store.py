@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from langchain_openai import OpenAIEmbeddings
 from langchain_qdrant import QdrantVectorStore
 
@@ -7,7 +9,7 @@ COLLECTION_NAME = "compound_content"
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small", api_key=settings.openai_api_key)
 
-
+@lru_cache
 def get_vector_store() -> QdrantVectorStore:
     return QdrantVectorStore.from_existing_collection(
         collection_name=COLLECTION_NAME,

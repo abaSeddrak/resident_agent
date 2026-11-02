@@ -1,10 +1,25 @@
 import json
-
+from langchain_openai import ChatOpenAI,OpenAIEmbeddings
+from app.config import settings
 from app.services.chat_service import answer
+from ragas import EvaluationDataset, evaluate
+from ragas.llms import LangchainLLMWrapper
+from ragas.embeddings import LangchainEmbeddingsWrapper
+from ragas.metrics import(
+    Faithfulness,
+    LLMContextPrecisionWithReference,
+    LLMContextRecall,
+    ResponseRelevancy
+
+)
 
 with open("evals/golden_set.json", "r", encoding="utf-8") as file:
     cases = json.load(file)
-
+ragas_samples = []
+judge_llm = LangchainLLMWrapper(ChatOpenAI( model=settings.openai_model, api_key=settings.openai_api_key,temperature=0))
+judge_embeddings = LangchainEmbeddingsWrapper(
+    OpenAIEmbeddings(model="text-embedding-3-small", api_key=settings.openai_api_key)
+)
 for case in cases:
     result = answer(
         case["question"],
@@ -15,6 +30,12 @@ for case in cases:
 
     if case["type"] == "answerable":
         section_hit = case["expected_section"] in result.sections
+        ragas_samples.append({
+           "user_input": case["question"],
+           "response": result.answer,
+           "retrieved_contexts":result.contexts,
+           "reference": case["expected_answer"],
+        })
     else:
         section_hit = None
 
@@ -24,3 +45,21 @@ for case in cases:
         f"sections={result.sections}"
     )
     print(f"    answer: {result.answer[:80]}")
+dataset = EvaluationDataset.from_list(ragas_samples)
+
+print(dataset)
+print(f" len {len(ragas_samples)}")
+
+rags_result = evaluate(
+    dataset=dataset,
+    llm=judge_llm,
+    embeddings=judge_embeddings,
+    metrics=[
+        Faithfulness(),
+        LLMContextPrecisionWithReference(),
+        LLMContextRecall(), 
+        ResponseRelevancy()
+    ]
+)
+
+print(rags_result)
