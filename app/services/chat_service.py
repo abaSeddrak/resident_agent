@@ -4,7 +4,7 @@ from app.config import settings
 from app.prompts.system_prompt import SYSTEM_PROMPT
 from app.rag.retriever import retrieve
 from app.models.chat import ChatResult
-from app.guardrails.output_rails import check_answer 
+from app.guardrails.output_rails import check_answer
 llm = ChatOpenAI(model=settings.openai_model, api_key=settings.openai_api_key)
 
 @traceable(name="resident-chat-answer")
@@ -32,7 +32,7 @@ def answer(question: str, appCode: str, compoundId: int, language_code: str)->Ch
         SYSTEM_PROMPT.format(question=question, content=context)
     ).content
     
-    llm_answer = check_answer(question,llm_answer,[doc.page_content for doc in docs])
+    llm_answer = check_answer(question, llm_answer, [doc.page_content for doc in docs], language_code)
     return ChatResult(
         answer=llm_answer,
         contexts=[doc.page_content for doc in docs],
