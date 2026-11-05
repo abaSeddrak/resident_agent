@@ -5,6 +5,7 @@ from app.services.chat_service import answer
 from ragas import EvaluationDataset, evaluate
 from ragas.llms import LangchainLLMWrapper
 from ragas.embeddings import LangchainEmbeddingsWrapper
+from app.models.chat import PreMessages
 from ragas.metrics import(
     Faithfulness,
     LLMContextPrecisionWithReference,
@@ -21,11 +22,14 @@ judge_embeddings = LangchainEmbeddingsWrapper(
     OpenAIEmbeddings(model="text-embedding-3-small", api_key=settings.openai_api_key)
 )
 for case in cases:
+    history = [PreMessages(**m) for m in case.get("history", [])]
     result = answer(
-        case["question"],
-        case["app_code"],
-        case["compound_id"],
-        case["language_code"],
+        
+        question=case["question"],
+        history=history,
+        appCode=case["app_code"],
+        compoundId=case["compound_id"],
+        language_code=case["language_code"],
     )
 
     if case["type"] == "answerable":

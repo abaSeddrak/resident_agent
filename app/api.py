@@ -7,7 +7,7 @@ app = FastAPI(title="Chatbot")
 
 @app.post("/chat")
 def chat(request:ChatRequest):
-    reply =answer(redact_pii(request.question),request.app_code,request.compound_id,request.language_code,
+    reply =answer(redact_pii(request.question),request.history , request.app_code,request.compound_id,request.language_code,
                   langsmith_extra={
                     "metadata":{
                         "app_code":request.app_code,
