@@ -13,8 +13,11 @@ llm = ChatOpenAI(model=settings.openai_model, api_key=settings.openai_api_key)
 
 @traceable(name="resident-chat-answer")
 def answer(question: str, history:list[PreMessages],  appCode: str, compoundId: int, language_code: str)->ChatResult:
+   
     standalone_question = rewrite_question(question,history)
     docs = retrieve(standalone_question, appCode, language_code, 4)
+    
+   
     for h in history:
      logging.info(h.role)
 
@@ -36,10 +39,10 @@ def answer(question: str, history:list[PreMessages],  appCode: str, compoundId: 
     )
 
     llm_answer = llm.invoke(
-        SYSTEM_PROMPT.format(question=question, content=context)
+        SYSTEM_PROMPT.format(question=standalone_question, content=context)
     ).content
     
-    llm_answer = check_answer(question, llm_answer, [doc.page_content for doc in docs], language_code)
+    llm_answer = check_answer(standalone_question, llm_answer, [doc.page_content for doc in docs], language_code)
     return ChatResult(
         answer=llm_answer,
         contexts=[doc.page_content for doc in docs],

@@ -1,7 +1,7 @@
 models:
   - type: main
     engine: openai
-    model: gpt-4o-mini
+    model: gpt-4o
 rails:
   output:
     flows:
@@ -13,6 +13,9 @@ prompts:
     content: |-
       You are given a task to identify if the hypothesis is grounded and entailed by the evidence.
       You will only use the contents of the evidence and not rely on external knowledge.
+      A hypothesis is entailed if it is stated directly in the evidence, OR if it follows by direct logical reasoning from the evidence.
+      For example, a rule that applies "daily" or "every day" applies to any specific day, unless that day is explicitly listed as an exception.
+      Any number, time, amount, or fact that does not appear in the evidence and cannot be directly derived from it is NOT entailed.
       Answer with yes/no.
       "evidence": {{ evidence }}
       "hypothesis": {{ response }}

@@ -1,22 +1,25 @@
+from langchain_openai import ChatOpenAI
+from langsmith import traceable
+from app.config import settings
 from app.models.chat import PreMessages
 from app.prompts.rewrite_prompt import REWRITE_PROMPT
-from langchain_openai import ChatOpenAI
 
-from app.config import settings
-
-llm_reqritw = ChatOpenAI(
-    model= settings.openai_model,
+rewrite_llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    temperature=0,
     api_key=settings.openai_api_key,
 )
-def rewrite_question(question:str,history:list[PreMessages]):
+
+
+@traceable(name="query-rewrite")
+def rewrite_question(question: str, history: list[PreMessages]) -> str:
     if not history:
         return question
-    history_text = " ".join(f"{m.role}  {m.content }" for m in history)
 
-       
-    pro =REWRITE_PROMPT.format(history=history_text,question=question)
-    full = llm_reqritw.invoke(pro).content
-    return full
+    history_text = "\n".join(f"{m.role}: {m.content}" for m in history)
+    prompt = REWRITE_PROMPT.format(history=history_text, question=question)
+    rewritten = rewrite_llm.invoke(prompt).content
+    return rewritten.strip()
 
 
 if __name__ == "__main__":
@@ -27,5 +30,3 @@ if __name__ == "__main__":
     print(rewrite_question("ويوم السبت؟", history))
     print(rewrite_question("ايه رسوم الصيانة؟", history))
     print(rewrite_question("ويوم السبت؟", []))
-
-
