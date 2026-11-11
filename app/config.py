@@ -9,4 +9,6 @@ class Settings(BaseSettings):
     qdrant_url:str
     
     langsmith_api_key:str
+    portkey_api_key:str
+    portkey_config_id:str
 settings = Settings()

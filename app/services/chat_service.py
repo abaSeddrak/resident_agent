@@ -8,8 +8,18 @@ from app.guardrails.output_rails import check_answer
 from app.models.chat import PreMessages
 import logging
 from app.services.query_rewriter import rewrite_question
+from portkey_ai import PORTKEY_GATEWAY_URL,createHeaders
 logger = logging.basicConfig(level=logging.DEBUG)
-llm = ChatOpenAI(model=settings.openai_model, api_key=settings.openai_api_key)
+
+llm = ChatOpenAI(model=settings.openai_model, 
+                 api_key=settings.portkey_api_key,
+                 base_url=PORTKEY_GATEWAY_URL,
+                 default_headers=createHeaders(
+                     api_key=settings.portkey_api_key,
+                     config= settings.portkey_config_id
+                   
+                 ),
+                 )
 
 @traceable(name="resident-chat-answer")
 def answer(question: str, history:list[PreMessages],  appCode: str, compoundId: int, language_code: str)->ChatResult:

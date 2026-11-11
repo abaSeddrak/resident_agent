@@ -28,5 +28,19 @@
     "expected_answer": null,
     "expected_section": null,
     "type": "unanswerable"
-  }
+  },
+  {
+  "id": "memory_ar_001",
+  "question": "ويوم السبت؟",
+  "history": [
+    {"role": "user", "content": "اوقات الهدوء في الكمبوند؟"},
+    {"role": "assistant", "content": "ساعات الهدوء يوميًا من 11 مساءً حتى 8 صباحًا، ويوم الجمعة حتى 11 صباحًا."}
+  ],
+  "language_code": "ar",
+  "app_code": "cityeyeprod",
+  "compound_id": 17,
+  "expected_answer": "ساعات الهدوء يوم السبت من 11 مساءً حتى 8 صباحًا.",
+  "expected_section": "communityRules",
+  "type": "answerable"
+}
 ]

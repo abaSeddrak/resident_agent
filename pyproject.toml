@@ -19,6 +19,7 @@ dependencies = [
     "markdownify>=1.2.3",
     "mcp>=1.30.0",
     "nemoguardrails>=0.24.1",
+    "portkey-ai>=2.3.4",
     "pydantic-settings>=2.16.1",
     "qdrant-client>=1.20.0",
     "ragas>=0.4.3",
