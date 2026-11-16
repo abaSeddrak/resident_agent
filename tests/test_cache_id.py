@@ -1,5 +1,4 @@
-from app.cache.answer_cache import make_cache_id
-
+from app.cache.cache_key import make_cache_id
 
 def test_same_question_gives_same_id():
     assert make_cache_id("cityeyeprod", "ar", "ما هي اوقات الهدوء") == make_cache_id("cityeyeprod", "ar", "ما هي اوقات الهدوء")
