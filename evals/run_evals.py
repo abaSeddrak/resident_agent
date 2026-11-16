@@ -30,6 +30,7 @@ for case in cases:
         appCode=case["app_code"],
         compoundId=case["compound_id"],
         language_code=case["language_code"],
+        use_cache=False,
     )
 
     if case["type"] == "answerable":

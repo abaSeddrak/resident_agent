@@ -7,6 +7,9 @@ from app.models.chat import ChatResult
 from app.guardrails.output_rails import check_answer
 from app.models.chat import PreMessages
 import logging
+from app.cache.answer_cache import get_cached_answer, save_answer
+from app.guardrails.output_rails import REFUSAL_MESSAGES
+
 from app.services.query_rewriter import rewrite_question
 from portkey_ai import PORTKEY_GATEWAY_URL,createHeaders
 logger = logging.basicConfig(level=logging.DEBUG)
@@ -20,16 +23,16 @@ llm = ChatOpenAI(model=settings.openai_model,
                    
                  ),
                  )
-
 @traceable(name="resident-chat-answer")
-def answer(question: str, history:list[PreMessages],  appCode: str, compoundId: int, language_code: str)->ChatResult:
-   
-    standalone_question = rewrite_question(question,history)
+def answer(question: str, history: list[PreMessages], appCode: str, compoundId: int, language_code: str, use_cache: bool = True) -> ChatResult:
+    standalone_question = rewrite_question(question, history)
+
+    if use_cache:
+        cached = get_cached_answer(appCode, language_code, standalone_question)
+        if cached:
+            return ChatResult(answer=cached, contexts=[], sections=[])
+
     docs = retrieve(standalone_question, appCode, language_code, 4)
-    
-   
-    for h in history:
-     logging.info(h.role)
 
     if not docs:
         if language_code == "ar":
@@ -51,8 +54,12 @@ def answer(question: str, history:list[PreMessages],  appCode: str, compoundId: 
     llm_answer = llm.invoke(
         SYSTEM_PROMPT.format(question=standalone_question, content=context)
     ).content
-    
+
     llm_answer = check_answer(standalone_question, llm_answer, [doc.page_content for doc in docs], language_code)
+
+    if use_cache and llm_answer not in REFUSAL_MESSAGES.values():
+        save_answer(appCode, language_code, standalone_question, llm_answer)
+
     return ChatResult(
         answer=llm_answer,
         contexts=[doc.page_content for doc in docs],

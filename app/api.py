@@ -3,6 +3,9 @@ from app.models.chat import ChatRequest
 from app.services.chat_service import answer
 from app.models.chat import ChatResult,ChatResponse
 from app.guardrails.pii import redact_pii
+from app.cache.answer_cache import ensure_cache_collection
+
+ensure_cache_collection()
 app = FastAPI(title="Chatbot")
 
 @app.post("/chat")

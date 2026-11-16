@@ -34,3 +34,29 @@ def get_cached_answer(app_code: str, language_code: str, question: str) -> str |
         return None
 
     return payload["answer"]
+
+
+
+from langchain_openai import OpenAIEmbeddings
+from qdrant_client.models import PointStruct
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small", api_key=settings.openai_api_key)
+
+
+def save_answer(app_code: str, language_code: str, question: str, answer: str):
+    client.upsert(
+        collection_name=CACHE_COLLECTION,
+        points=[
+            PointStruct(
+                id=make_cache_id(app_code, language_code, question),
+                vector=embeddings.embed_query(question),
+                payload={
+                    "app_code": app_code,
+                    "language": language_code,
+                    "question": question,
+                    "answer": answer,
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                },
+            )
+        ],
+    )
